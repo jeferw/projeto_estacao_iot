@@ -1,0 +1,48 @@
+html, body
+{
+  font-family: 'ZCOOL QingKe HuangYou', cursive;
+  height: 100%;
+}
+
+body
+{
+  background: #333333;
+  background-image: url(../images/img.png);
+  background-position: top;
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100%;
+  color: #ffffff;
+}
+
+.container 
+{
+  cursor: default;
+  margin-top: 5em;
+}
+
+.navbar-light .navbar-brand
+{
+  font-size: 1.5em;
+  color: #ffffff !important;
+}
+
+.navbar.navbar-light
+{
+  background-color: #203239;
+}
+
+h1
+{
+  text-shadow: 2px 2px #8c8b8b;
+}
+
+h4
+{
+  text-shadow: 1px 1px #8c8b8b;
+}
+
+.row2
+{
+  margin-top: 3em;
+}

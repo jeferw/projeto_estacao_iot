@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Estação IoT</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no'
+        name='viewport'>
+    <meta name="author" content="Jeferson Ricardo Weiss">
+    <meta name="description" content="
+    Estação meteorológica IoT, que recebe os dados de um ESP8266, onde estão acoplados os sensores: 
+    Sensor de Luz Ambiente TEMT6000 e Sensor de Pressão, Umidade e Temperatura BME280.
+    São exidas informações de temperatura, umidade, pressão e luminosidade embiente.">
+    <link rel="icon" href="images/favicon.ico" sizes="16x16" type="image/ico">
+
+    <!--     Fonts and icons     -->
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.1/css/all.css"
+        integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+    <!-- CSS Files -->
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/now-ui-dashboard.css" rel="stylesheet" />
+
+    <link href="css/main.css" rel="stylesheet" />
+    <!--
+    <link href="https://fonts.googleapis.com/css?family=ZCOOL+QingKe+HuangYou" rel="stylesheet">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">-->
+</head>
+
+<body class="">
+    <div class="wrapper">
+
+        <div class="main-panel" id="main-panel">
+
+            <nav class="navbar navbar-expand-lg navbar-transparent  bg-primary  navbar-absolute">
+                <div class="container-fluid">
+                    <div class="navbar-wrapper">
+                        <a class="navbar-brand" href="#">
+                            <img src="images/logo-min.png" class="d-inline-block" alt="">
+                            Estação IoT
+                        </a>
+                    </div>
+                    <div class="navbar-wrapper">
+                        <span class="navbar-text float-right">
+                            Última Atualização: <span id="txtUltAtualizacao">-</span>
+                        </span>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="panel-header panel-header-lg" id="fullChart">
+                <div class="lds-ripple" id="fullChartLoad">
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+            <div class="content">
+                <div class="row">
+                    <div class="col-lg-3">
+                        <div class="card card-chart">
+                            <div class="card-header">
+                                <h5 class="card-category">Temperatura</h5>
+                                <h4 class="card-title"> <samp id="txtTemperatura">-</samp>ºC</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-area" id="temperaturaChart">
+                                    <div class="lds-ripple min" id="temperaturaChartLoad">
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card card-chart">
+                            <div class="card-header">
+                                <h5 class="card-category">Umidade</h5>
+                                <h4 class="card-title"><samp id="txtUmidade">-</samp>%</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-area" id="umidadeChart">
+                                    <div class="lds-ripple min" id="umidadeChartLoad">
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card card-chart">
+                            <div class="card-header">
+                                <h5 class="card-category">Pressão</h5>
+                                <h4 class="card-title"><samp id="txtPressao">-</samp>hPa</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-area"  id="pressaoChart">
+                                    <div class="lds-ripple min" id="pressaoChartLoad">
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="card card-chart">
+                            <div class="card-header">
+                                <h5 class="card-category">Luminosidade</h5>
+                                <h4 class="card-title"><samp id="txtLuminosidade">-</samp></h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-area" id="ldrChart">
+                                    <div class="lds-ripple min" id="ldrChartLoad">
+                                        <div></div>
+                                        <div></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <footer class="footer">
+            </footer>-->
+        </div>
+    </div>
+</body>
+<!--   Core JS Files   -->
+<script src="chart.js/Chart.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="js/main.js"></script>
+
+<script>
+    //debugger;
+
+    app.getUserIPLocal((localAddress) => {
+        app.request({
+            method: 'GET',
+            url: 'http://www.geoplugin.net/json.gp',
+            param: ''
+        })
+            .then(data => {
+                var address = data;
+                address.local_address = localAddress;
+
+                socket.emit('servidor/addresscli', address);
+            })
+            .catch(err => { console.log(err) })
+    });
+
+    var socket = io();
+    var spnTemperatura = document.getElementById('txtTemperatura');
+    var spnUmidade = document.getElementById('txtUmidade');
+    var spnPressao = document.getElementById('txtPressao');
+    var spnLuminosidade = document.getElementById('txtLuminosidade');
+    var spnUltAtualizacao = document.getElementById('txtUltAtualizacao');
+
+    socket.on('msgCliente', function (data) {
+        spnTemperatura.textContent = data.TEMPERATURA;
+        spnUmidade.textContent = data.UMIDADE;
+        spnPressao.textContent = data.PRESSAO;
+        spnLuminosidade.textContent = data.LDR;
+        spnUltAtualizacao.textContent = data.DATAHORALBL;
+
+        app.getCharts();
+    });
+
+    window.onload = function () {
+        app.getCharts();
+    };
+</script>
+
+
+</html>
