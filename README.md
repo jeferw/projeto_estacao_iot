@@ -24,6 +24,11 @@ Os três serviços, banco de dados, servidor e Broker, estão rodando destro de 
  - Segue algumas imagens do Website:
 
 ![](img/grafico.JPG)
-<br>
-<br>
+
+
 ![](img/gif.gif)
+
+
+- ESP8266 imagem:
+
+![](img/esp8266.jpg)
