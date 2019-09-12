@@ -10,7 +10,8 @@ Neste projeto, um dispositivo **ESP8266**, conetado na rede Wifi, envia por meio
 Que são coletados dos sensores acoplados ao dispositivo:
  - TEMT6000
  - BME280
-<hr>
+
+
 As informações coletadas são publicadas para o **Broker MQTT *Mosquitto*** as reencaminhem.
 <br>
 O Broker reencaminha as mensagens para um **servidor Node.js** que está programado para recebe-las e armazená-las no bando de dados.<br>
@@ -23,5 +24,6 @@ Os três serviços, banco de dados, servidor e Broker, estão rodando destro de 
  - Segue algumas imagens do Website:
 
 ![](img/grafico.JPG)
+<br>
 <br>
 ![](img/gif.gif)
